@@ -1,0 +1,12 @@
+.tarjeta {
+    background-color: #A3A3A3;
+}
+
+button {
+    height: initial;
+    font-size: initial;
+}
+
+button[type="submit"] {
+    background-color: mediumseagreen;
+}

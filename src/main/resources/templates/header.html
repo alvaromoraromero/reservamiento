@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="utf-8">
+	<link th:href="@{/css/header.css}" rel="stylesheet">
+	<script th:src="@{/js/header.js}"></script>
+	<script src="https://kit.fontawesome.com/53030b8f7c.js" crossorigin="anonymous"></script>
+</head>
+<header>
+	<ul th:with="pagina_actual=${#httpServletRequest.getRequestURI()}">
+		<li class="logo"><a href="/"><img th:src="@{/img/logo.png}"></a></li>
+		<li th:classappend="${pagina_actual == '/' ? 'active':''}"><a href="/" title="Volver a la página de inicio"><i class="fas fa-home"></i> Inicio</a></li>
+		<li th:classappend="${pagina_actual == '/reservas' ? 'active':''}"><a href="/reservas" title="Consultar mis reservas"><i class="far fa-calendar-alt"></i> Reservas</a></li>
+		<li th:classappend="${pagina_actual == '/contacto' ? 'active':''}"><a href="/contacto" title="Contacta con nosotros"><i class="fas fa-comment-alt"></i> Contacto</a></li>
+		<li sec:authorize="hasAuthority('ADMINISTRADOR')" th:classappend="${pagina_actual.startsWith('/admin') ? 'active':''}"><a href="/admin" title="Acceder al panel de administración" style="color: orange"><i class='fas fa-user-shield'></i> Admin</a></li>
+		<li sec:authorize="hasAuthority('ADMINISTRADOR')" th:classappend="${pagina_actual.startsWith('/graphiql') ? 'active':''}"><a href="/graphiql" title="Acceder a la API GraphQL" style="color: orange"><i class="fas fa-file-code"></i> GraphQL <i class="fas fa-external-link-alt fa-xs"></i></a></li>
+		<li sec:authorize="!isAnonymous()" class="derecha"><a href="/logout" title="Cerrar sesión y regresar a la pantalla de login"><i class="fas fa-power-off"></i> Cerrar sesión</a></li>
+		<li sec:authorize="!isAnonymous()" th:classappend="${pagina_actual == '/cuenta' ? 'active':''}" class="derecha"><a href="/cuenta" title="Visitar mi perfil"><i class="fas fa-user"></i> Hola, <span sec:authentication="name"></span></a></li>
+		<li sec:authorize="isAnonymous()" th:classappend="${pagina_actual == '/register' ? 'active':''}" class="derecha"><a href="/register" title="Crear una nueva cuenta"><i class="fas fa-user-plus"></i> Registrarse</a></li>
+		<li sec:authorize="isAnonymous()" th:classappend="${pagina_actual == '/login' ? 'active':''}" class="derecha"><a href="/login" title="Iniciar sesión en una cuenta existente"><i class="fas fa-sign-in-alt"></i> Iniciar sesión</a></li>
+		<li id="alternarTema" class="derecha" title="Alternar tema claro/oscuro"><a onclick="alternarTema();"><i class="fas fa-moon fa-lg"></i></a></li>
+	</ul>
+</header>
+<footer>
+	<ul>
+		<li><span style="color: gray;"><i class="far fa-copyright"></i> Reservamiento 2022</span>
+		<li th:classappend="${#httpServletRequest.getRequestURI() == '/privacidad' ? 'active':''}"><a href="/privacidad"><i class="fas fa-user-secret"></i> Política de privacidad</a></li>
+	</ul>
+</footer>
+</html>

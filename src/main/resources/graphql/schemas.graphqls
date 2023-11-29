@@ -1,0 +1,188 @@
+scalar Date
+#scalar DateTime
+
+enum ERole{
+    ADMINISTRADOR
+    USUARIO
+}
+
+type Alojamiento{
+    id_alojamiento:ID!
+    nombre:String!
+    direccion:String!
+    mapa:String!
+    imagen:String!
+    ubicacion:String!
+    precio:Int
+    tipo:String!
+    huespedes:Int
+    habitaciones:Int
+    activo:Boolean
+}
+
+type Comentario{
+    id_comentario:ID!
+    usuario:Usuario
+    alojamiento:Alojamiento
+    estrellas:Int
+    titulo:String
+    descripcion:String
+    #fecha_comentario:DateTime
+    mostrar:Boolean
+}
+
+type Reserva {
+    id_reserva:ID!
+    usuario:Usuario
+    alojamiento:Alojamiento
+    fecha_inicio:Date
+    fecha_fin:Date
+    personas:Int
+    observaciones:String
+    fecha_reserva:Date
+    habitaciones:Int
+    importe:Int
+    pagado:Boolean
+    activo:Boolean
+}
+
+type Usuario {
+    id_usuario:ID!
+    nombre:String!
+    apellidos:String!
+    email:String!
+    username:String!
+    password:String!
+    telefono:String
+    genero:String!
+    fecha_registro:Date
+    activo:Boolean
+    rol:ERole
+}
+
+
+
+type Query {
+    allAlojamientos:[Alojamiento]
+
+    findAlojamientoByID(
+        id:ID!
+    ): Alojamiento
+
+    buscadorAlojamientos(
+        destino:String!
+        fechainicio:String!
+        fechafin:String!
+        personas:Int!
+    ):[Alojamiento]
+
+
+    allComentarios:[Comentario]
+
+    findComentarioByID(
+        id:ID!
+    ): Comentario
+
+
+    allReservas:[Reserva]
+
+    findReservaByID(
+        id:ID!
+    ): Reserva
+
+
+    allUsuarios:[Usuario]
+
+    findUsuarioByID(
+        id:ID!
+    ): Usuario
+}
+
+type Mutation{
+    guardarAlojamiento(
+        id: Int
+        alojamiento: AlojamientoInput!
+    ): String
+
+    deshabilitarAlojamiento(
+        id: ID!
+    ): String
+
+    habilitarAlojamiento(
+        id: ID!
+    ): String
+
+    guardarComentario(
+        id: Int
+        comentario: ComentarioInput!
+    ): String
+
+
+    guardarReserva(
+        id: Int
+        reserva: ReservaInput!
+    ): String
+
+    cancelarReserva(
+        id: ID!
+    ): String
+
+    habilitarReserva(
+        id: ID!
+    ): String
+
+
+    guardarUsuario(
+        id: Int
+        usuario: UsuarioInput!
+    ): String
+
+    desactivarUsuario(
+        id: ID!
+    ): String
+
+    reactivarUsuario(
+        id: ID!
+    ): String
+}
+
+input AlojamientoInput{
+    nombre:String
+    ubicacion:String
+    direccion:String
+    mapa:String!
+    imagen:String!
+    precio:Int
+    tipo:String
+    huespedes:Int
+    habitaciones:Int
+}
+
+input ComentarioInput{
+    id_usuario:Int
+    id_alojamiento:Int
+    estrellas:Int
+    titulo:String
+    descripcion:String
+}
+
+input UsuarioInput{
+    nombre:String
+    apellidos:String
+    email:String
+    username:String
+    password:String
+    telefono:String
+    genero:String
+    fecha_registro:Date
+    rol:ERole
+}
+
+input ReservaInput{
+    id_usuario:Int
+    id_alojamiento:Int
+    fecha_inicio:Date
+    fecha_fin:Date
+    personas:Int
+    pagado:Boolean
+}

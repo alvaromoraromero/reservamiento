@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <div th:include="/header.html"></div>
+    <div th:include="/admin/header2.html"></div>
+    <title>Administrar alojamientos | Reservamiento</title>
+    <script>
+        function cambioTipo(val) {
+            console.log(val);
+            var habitaciones = document.getElementById("habitaciones");
+            if (val=="Apartamento") {
+                habitaciones.value = "1";
+                habitaciones.readOnly = true;
+            }
+            else {
+                habitaciones.value = "";
+                habitaciones.readOnly = false;
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="contenido">
+    <h1>Administración: Alojamientos</h1>
+    <h2 th:utext="(${alojamientoedit.id_alojamiento}==0 ? '<i class=\'fas fa-plus-circle\'></i> Insertar' : '<i class=\'fas fa-edit\'></i> Editar') + ' alojamiento'"></h2>
+    <div class="formulario">
+    <form th:action="@{/admin/agregaralojamiento}" th:object="${alojamiento}" method="post">
+        <input type="hidden" name="id_alojamiento" th:value="${alojamientoedit.id_alojamiento}">
+        <div>
+            <div>
+                <label for="nombre">Nombre:</label>
+                <input required type="text" id="nombre" name="nombre" placeholder="Nombre" th:value="${alojamientoedit.nombre}">
+            </div>
+            <div>
+                <label for="direccion">Dirección:</label>
+                <input required type="text" id="direccion" name="direccion" placeholder="Dirección" th:value="${alojamientoedit.direccion}">
+            </div>
+            <div>
+                <label for="mapa">Mapa:</label>
+                <input required type="text" id="mapa" name="mapa" placeholder="Mapa embed" th:value="${alojamientoedit.mapa}">
+            </div>
+        </div>
+        <div>
+            <div>
+                <label for="imagen">Imagen scr:</label>
+                <input style="width: 800px" required type="text" id="imagen" name="imagen" placeholder="Imagen src" th:value="${alojamientoedit.imagen}">
+            </div>
+        </div>
+        <div>
+            <div>
+                <label for="ubicacion">Ubicación:</label>
+                <input required type="text" id="ubicacion" name="ubicacion" placeholder="Ubicación" th:value="${alojamientoedit.ubicacion}">
+            </div>
+            <div>
+                <label for="precio">Precio:</label>
+                <input required type="number" id="precio" name="precio" placeholder="Precio" min="0" max="999" th:value="${alojamientoedit.precio}==0 ? '' : ${alojamientoedit.precio}">
+            </div>
+            <div>
+                <label for="tipo">Tipo:</label>
+                <select required id="tipo" name="tipo" onchange="cambioTipo(this.value)">
+                    <option th:selected="${alojamientoedit.id_alojamiento}==0" disabled value="">Tipo...</option>
+                    <option th:selected="${alojamientoedit.tipo}=='Hotel'">Hotel</option>
+                    <option th:selected="${alojamientoedit.tipo}=='Apartamento'">Apartamento</option>
+                </select>
+            </div>
+            <div>
+                <label for="huespedes">Huéspedes:</label>
+                <input required type="number" id="huespedes" name="huespedes" placeholder="Huéspedes" min="1" max="7" th:value="${alojamientoedit.huespedes}==0 ? '' : ${alojamientoedit.huespedes}">
+            </div>
+            <div>
+                <label for="habitaciones">Habitaciones:</label>
+                <input required type="number" id="habitaciones" name="habitaciones" placeholder="Habitaciones" min="1" th:value="${alojamientoedit.habitaciones}==0 ? '' : ${alojamientoedit.habitaciones}">
+            </div>
+            <div th:if="${alojamientoedit.id_alojamiento}!=0">
+                <label>Cancelar:</label>
+                <a href="/admin/alojamientos"><button type="button" style="background-color: indianred">Cancelar</button></a>
+            </div>
+            <div>
+                <label th:text="${alojamientoedit.id_alojamiento}==0 ? 'Añadir:' : 'Editar:'"></label>
+                <button type="submit" th:text="${alojamientoedit.id_alojamiento}==0 ? 'Añadir' : 'Editar'"></button>
+            </div>
+        </div>
+    </form>
+    </div>
+    <h2 th:if="${alojamientoedit.id_alojamiento}==0"><i class="fas fa-search"></i> Buscar alojamiento</h2>
+    <div class="formulario" th:if="${alojamientoedit.id_alojamiento}==0">
+        <form>
+            <div>
+                <div>
+                    <label for="q">Nombre, dirección o ubicación:</label>
+                    <input type="text" id="q" name="q" placeholder="Nombre, dirección o ubicación" th:value="${query}">
+                </div>
+                <div th:if="${query.length()}>0">
+                    <label>Borrar búsqueda:</label>
+                    <a href="/admin/alojamientos"><button type="button" style="background-color: indianred">Borrar búsqueda</button></a>
+                </div>
+                <div>
+                    <label>Buscar:</label>
+                    <button type="submit">Buscar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <h2><i class="fas fa-list-alt"></i> Editar o eliminar alojamientos</h2>
+    <h3 style="color: red" th:if="${alojamientos.isEmpty()}">No se han encontrado alojamientos</h3>
+    <table th:if="${!alojamientos.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Dirección</th>
+            <th>Ubicacion</th>
+            <th>Precio</th>
+            <th>Huespedes</th>
+            <th>Habitaciones</th>
+            <th>Editar</th>
+            <th>Deshabilitar</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="alojamiento:${alojamientos}" th:class="${alojamiento.activo} ? '' : 'inactivo'">
+            <td><a th:href="'/alojamiento?id=' + ${alojamiento.id_alojamiento}" th:text="'[' + ${alojamiento.id_alojamiento} +'] ' + ${alojamiento.tipo} + ' ' + ${alojamiento.nombre}"></a></td>
+            <td th:text="${alojamiento.direccion}"></td>
+            <td th:text="${alojamiento.ubicacion}"></td>
+            <td th:text="${alojamiento.precio}"></td>
+            <td th:text="${alojamiento.huespedes}"></td>
+            <td th:text="${alojamiento.habitaciones}"></td>
+            <td>
+                <form th:action="@{/admin/alojamientos}" method="post">
+                    <input type="hidden" name="id_alojamiento" th:value="${alojamiento.id_alojamiento}">
+                    <button style="background-color: blue">Editar</button>
+                </form>
+            </td>
+            <td>
+                <p th:if="!${alojamiento.activo}">
+                    Deshabilitado
+                </p>
+                <form th:action="@{/admin/deshabilitaralojamiento}" th:if="${alojamiento.activo}" method="post">
+                    <input type="hidden" name="id_alojamiento" th:value="${alojamiento.id_alojamiento}">
+                    <button style="background-color: indianred;">Deshabilitar</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<th:block th:if="${respuesta=='agregado'}">
+    <p class="error everde">Alojamiento añadido correctamente</p>
+</th:block>
+<th:block th:if="${respuesta=='editado'}">
+    <p class="error everde">Alojamiento editado correctamente</p>
+</th:block>
+<th:block th:if="${respuesta=='deshabilitado'}">
+    <p class="error everde">Alojamiento deshabilitado correctamente</p>
+</th:block>
+<th:block th:if="${respuesta=='error'}">
+    <p class="error erojo">Se ha producido un error</p>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<h1>Encuentra tu próximo alojamiento</h1>
+<form th:action="@{/alojamientos}" method="post">
+    <div>
+        <p>
+            <label for="destino">Destino:</label>
+            <select required name="destino" id="destino" onchange="document.getElementById('fechainicio').focus();">
+                <option selected disabled value="">Destino...</option>
+                <option th:each="ubicacion:${ubicaciones}" th:selected="${destino}==${ubicacion}" th:text="${ubicacion}"></option>
+            </select>
+        </p>
+        <p>
+            <label for="fechainicio">Fecha inicio:</label>
+            <input required type="date" name="fechainicio" id="fechainicio" th:value="${reserva.fecha_inicio}" onfocus="this.showPicker();" onchange="actualizarFechas();document.getElementById('fechafin').focus();">
+        </p>
+        <p>
+            <label for="fechafin">Fecha fin:</label>
+            <input required type="date" name="fechafin" id="fechafin" th:value="${reserva.fecha_fin}" onfocus="this.showPicker();" onchange="document.getElementById('personas').focus();">
+        </p>
+        <p>
+            <label for="personas">Personas:</label>
+            <input required type="number" name="personas" id="personas" th:value="${reserva.personas} == 0 ? '' : ${reserva.personas}" min="1" placeholder="Personas">
+        </p>
+        <button style="margin-top: 24px;">Buscar</button>
+    </div>
+</form>

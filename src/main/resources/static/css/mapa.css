@@ -1,0 +1,63 @@
+#mapa {
+    display: none;
+    position: fixed;
+    flex-direction: column;
+    align-items: flex-end;
+    margin: 0 auto;
+    background-color: var(--theme-color);
+    border: solid var(--theme-color) 10px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 998;
+}
+
+#mapa:not(.draggable) {
+    cursor: not-allowed;
+}
+
+.draggable {
+    cursor: move;
+}
+
+#mapa > div {
+    width: 100%;
+    pointer-events: none;
+}
+
+#mapa i {
+    color: white;
+    cursor: pointer;
+    float: right;
+    padding: 0 2px;
+    pointer-events: initial;
+}
+
+#mapa	iframe {
+    margin-top: 7px;
+    cursor: initial;
+}
+
+#recargar:hover {
+    color: greenyellow;
+}
+
+#minimizar:hover {
+    color: dodgerblue;
+}
+
+#restaurar, #desactivar-pantalla-completa {
+    display: none;
+}
+
+#maximizar:hover, #restaurar:hover {
+    color: yellow;
+}
+
+#activar-pantalla-completa:hover, #desactivar-pantalla-completa:hover {
+    color: seagreen;
+}
+
+#cerrar:hover {
+    color: #DF171E;
+}

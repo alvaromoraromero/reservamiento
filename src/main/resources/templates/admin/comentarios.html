@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <div th:include="/header.html"></div>
+    <div th:include="/admin/header2.html"></div>
+    <title>Administrar comentarios | Reservamiento</title>
+</head>
+<body>
+<div class="contenido">
+    <h1>Administración: Comentarios</h1>
+    <h2 th:utext="(${comentarioedit.id_comentario}==0 ? '<i class=\'fas fa-plus-circle\'></i> Insertar' : '<i class=\'fas fa-edit\'></i> Editar') + ' comentario'"></h2>
+    <div class="formulario">
+    <form th:action="@{/admin/agregarcomentario}" th:object="${comentario}" method="post">
+        <input type="hidden" name="id_comentario" th:value="${comentarioedit.id_comentario}">
+        <div>
+            <div>
+                <label for="username">Username:</label>
+                <input required type="text" id="username" name="username" placeholder="Username" th:value="${comentarioedit.usuario}!=null ? ${comentarioedit.usuario.username} : ''">
+            </div>
+            <div>
+                <label for="id_alojamiento">Alojamiento:</label>
+                <input required type="number" min="1" id="id_alojamiento" name="id_alojamiento" placeholder="ID alojamiento" th:value="${comentarioedit.alojamiento}!=null ? ${comentarioedit.alojamiento.id_alojamiento} : ''">
+            </div>
+            <div>
+                <label for="estrellas">Estrellas:</label>
+                <input required type="number" min="1" max="5" id="estrellas" name="estrellas" placeholder="Estrellas" th:value="${comentarioedit.alojamiento}!=null ? ${comentarioedit.estrellas} : ''">
+            </div>
+            <div>
+                <label for="titulo">Título:</label>
+                <input required type="text" id="titulo" name="titulo" placeholder="Título" th:value="${comentarioedit.titulo}">
+            </div>
+            <div>
+                <label for="descripcion">Descripción:</label>
+                <textarea required style="height: initial" id="descripcion" name="descripcion" placeholder="Descripción" th:text="${comentarioedit.descripcion}"></textarea>
+            </div>
+            <div th:if="${comentarioedit.id_comentario}!=0">
+                <label>Cancelar:</label>
+                <a href="/admin/comentarios"><button type="button" style="background-color: indianred">Cancelar</button></a>
+            </div>
+            <div>
+                <label th:text="${comentarioedit.id_comentario}==0 ? 'Añadir:' : 'Editar:'"></label>
+                <button type="submit" th:text="${comentarioedit.id_comentario}==0 ? 'Añadir' : 'Editar'"></button>
+            </div>
+        </div>
+    </form>
+    </div>
+    <h2 th:if="${comentarioedit.id_comentario}==0"><i class="fas fa-search"></i> Buscar comentario</h2>
+    <div class="formulario" th:if="${comentarioedit.id_comentario}==0">
+        <form>
+            <div>
+                <div>
+                    <label for="q">Titulo, descripción o nombre alojamiento:</label>
+                    <input type="text" id="q" name="q" placeholder="Titulo, descripción o nombre alojamiento" th:value="${query}">
+                </div>
+                <div th:if="${query.length()}>0">
+                    <label>Borrar búsqueda:</label>
+                    <a href="/admin/comentarios"><button type="button" style="background-color: indianred">Borrar búsqueda</button></a>
+                </div>
+                <div>
+                    <label>Buscar:</label>
+                    <button type="submit">Buscar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <h2><i class="fas fa-list-alt"></i> Editar o eliminar comentarios</h2>
+    <h3 style="color: red" th:if="${comentarios.isEmpty()}">No se han encontrado comentarios</h3>
+    <table th:if="${!comentarios.isEmpty()}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Alojamiento</th>
+            <th><i class="fas fa-star"></i></th>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Fecha de registro</th>
+            <th>Editar</th>
+            <th>Deshabilitar</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="comentario:${comentarios}" th:class="${comentario.mostrar} ? '' : 'inactivo'">
+            <td th:text="${comentario.id_comentario}"></td>
+            <td><a th:href="'/admin/usuarios?q=' + ${comentario.usuario.email}" th:text="'[' + ${comentario.usuario.id_usuario} +'] ' + ${comentario.usuario.username}"></a></td>
+            <td><a th:href="'/alojamiento?id=' + ${comentario.alojamiento.id_alojamiento}" th:text="'[' + ${comentario.alojamiento.id_alojamiento} +'] ' + ${comentario.alojamiento.tipo} + ' ' + ${comentario.alojamiento.nombre}"></a></td>
+            <td th:text="${comentario.estrellas}"></td>
+            <td th:text="${comentario.titulo}"></td>
+            <td th:text="${comentario.descripcion}"></td>
+            <td th:text="${@thymeMath.formatearFecha(comentario.fecha_comentario)}"></td>
+            <td>
+                <form th:action="@{/admin/comentarios}" method="post">
+                    <input type="hidden" name="id_comentario" th:value="${comentario.id_comentario}">
+                    <button style="background-color: blue">Editar</button>
+                </form>
+            </td>
+            <td>
+                <p th:if="!${comentario.mostrar}">
+                    Deshabilitado
+                </p>
+                <form th:action="@{/admin/ocultarcomentario}" th:if="${comentario.mostrar}" method="post">
+                    <input type="hidden" name="id_comentario" th:value="${comentario.id_comentario}">
+                    <button style="background-color: indianred;">Ocultar</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<th:block th:if="${respuesta=='agregado'}">
+    <p class="error everde">Comentario añadido correctamente</p>
+</th:block>
+<th:block th:if="${respuesta=='editado'}">
+    <p class="error everde">Comentario editado correctamente</p>
+</th:block>
+<th:block th:if="${respuesta=='ocultado'}">
+    <p class="error everde">Comentario ocultado correctamente</p>
+</th:block>
+<th:block th:if="${respuesta=='error'}">
+    <p class="error erojo">Se ha producido un error</p>
+</th:block>
+<th:block th:if="${respuesta=='errorusuario'}">
+    <p class="error erojo">No existe el usuario que has introducido</p>
+</th:block>
+<th:block th:if="${respuesta=='erroralojamiento'}">
+    <p class="error erojo">No existe el alojamiento que has introducido</p>
+</th:block>
+</body>
+</html>

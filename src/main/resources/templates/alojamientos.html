@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<div th:include="/header.html"></div>
+	<link th:href="@{/css/index.css}" rel="stylesheet">
+	<link th:href="@{/css/alojamientos.css}" rel="stylesheet">
+	<title>Alojamientos | Reservamiento</title>
+</head>
+<body>
+	<div class="contenido">
+		<div th:if="!${idalojamiento}" th:include="buscador.html"></div>
+		<h1 th:if="${alojamientos.size()>0}">Alojamientos encontrados:</h1>
+		<div class="tarjetas">
+			<th:block th:if="${alojamientos.size()==0}">
+				<p class="error erojo">No se han encontrado resultados</p>
+				<h1>No se han encontrado resultados</h1>
+			</th:block>
+			<div class="tarjeta" th:each="alojamiento:${alojamientos}">
+				<img th:src="${alojamiento.imagen}">
+				<h1 th:text="${alojamiento.tipo} + ' ' + ${alojamiento.nombre}"></h1>
+				<ul>
+					<li><b>Dirección: </b> <span th:text="''+${alojamiento.direccion}"></span></li>
+					<li><b>Precio/noche: </b> <span th:text="''+${alojamiento.precio}"></span>€</li>
+					<li><b>Máximo huéspedes: </b><span th:text="${alojamiento.huespedes}"></span></li>
+					<li><b>Habitaciones necesarias: </b><span th:text="${@thymeMath.ceil(reserva.personas, alojamiento.huespedes)}"></span></li>
+					<li th:if="${alojamiento.tipo}!='Apartamento'"><b>Habitaciones totales: </b><span th:text="${alojamiento.habitaciones}"></span></li>
+				</ul>
+				<form th:action="@{/reservar}" th:object="${reserva}" method="post">
+					<input type="hidden" name="id_alojamiento" th:value="${alojamiento.id_alojamiento}">
+					<a th:href="@{'/alojamiento?id=' + ${alojamiento.id_alojamiento}}"><button type="button">Ver detalles</button></a>
+					<button type="submit">Reservar</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <div th:include="/header.html"></div>
+    <title>Panel de administración | Reservamiento</title>
+</head>
+<body>
+<div class="contenido">
+    <h1>Panel de administración</h1>
+    <div class="tarjetas">
+        <div class="tarjeta">
+            <i class="fas fa-hotel fa-5x"></i>
+            <h1>Alojamientos</h1>
+            <a href="/admin/alojamientos"><button>Acceder</button></a>
+        </div>
+        <div class="tarjeta">
+            <i class="fas fa-comments fa-5x"></i>
+            <h1>Comentarios</h1>
+            <a href="/admin/comentarios"><button>Acceder</button></a>
+        </div>
+        <div class="tarjeta">
+            <i class="fas fa-calendar-alt fa-5x"></i>
+            <h1>Reservas</h1>
+            <a href="/admin/reservas"><button>Acceder</button></a>
+        </div>
+        <div class="tarjeta">
+            <i class="fas fa-user fa-5x"></i>
+            <h1>Usuarios</h1>
+            <a href="/admin/usuarios"><button>Acceder</button></a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

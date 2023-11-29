@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<div th:include="/header.html"></div>
+	<link th:href="@{/css/reservas.css}" rel="stylesheet">
+	<title>Reservas | Reservamiento</title>
+</head>
+<body>
+<div class="contenido">
+	<h1>Próximas reservas:</h1>
+	<p th:if="${reservasactivas.isEmpty()}">No tienes ninguna reserva pasada. <a href="/">Busca tu próximo destino</a></p>
+	<table th:if="${!reservasactivas.isEmpty()}">
+		<thead>
+		<tr>
+			<th>Alojamiento</th>
+			<th>Fecha inicio</th>
+			<th>Fecha fin</th>
+			<th>Habitaciones reservadas</th>
+			<th>Fecha de creación</th>
+			<th>Importe</th>
+			<th>¿Pagado?</th>
+			<th>Gestionar</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr th:each="reserva:${reservasactivas}" th:class="${reserva.activo} ? '' : 'inactivo'">
+			<td><a th:href="'/alojamiento?id=' + ${reserva.alojamiento.id_alojamiento}" th:text="${reserva.alojamiento.tipo} + ' ' + ${reserva.alojamiento.nombre}"></a></td>
+			<td th:text="${reserva.fecha_inicio}"></td>
+			<td th:text="${reserva.fecha_fin}"></td>
+			<td th:text="${reserva.habitaciones} + ' (' + ${reserva.personas} + ' personas)'"></td>
+			<td th:text="${reserva.fecha_reserva}"></td>
+			<td th:text="${reserva.importe} + '€'"></td>
+			<td th:text="${reserva.pagado} ? 'Si' : 'No'"></td>
+			<td>
+				<form th:if="${reserva.activo}" th:action="@{/gestionar}" method="post">
+					<th:block th:if="${respuesta=='cancelada'}">
+						<p class="error everde">Reserva cancelada correctamente</p>
+					</th:block>
+					<th:block th:if="${respuesta=='error'}">
+						<p class="error erojo">Se ha producido un error</p>
+					</th:block>
+					<input type="hidden" name="id_reserva" th:value="${reserva.id_reserva}">
+					<button type="submit">Gestionar</button>
+				</form>
+				<span th:if="${!reserva.activo}">Cancelada</span>
+			</td>
+			<td><i class="fas fa-info-circle" th:title="${reserva.observaciones==null} ? 'No hay ninguna observación adicional' : 'Observaciones: ' + ${reserva.observaciones}"></i></td>
+		</tr>
+		</tbody>
+	</table>
+	<hr>
+	<h1>Reservas pasadas:</h1>
+	<p th:if="${reservaspasadas.isEmpty()}">No tienes ninguna reserva pasada</p>
+	<table th:if="${!reservaspasadas.isEmpty()}">
+		<thead>
+		<tr>
+			<th>Alojamiento</th>
+			<th>Fecha inicio</th>
+			<th>Fecha fin</th>
+			<th>Habitaciones reservadas</th>
+			<th>Fecha de creación</th>
+			<th>Importe</th>
+			<th>¿Pagado?</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr th:each="reserva:${reservaspasadas}" th:class="${reserva.activo} ? '' : 'inactivo'">
+			<td><a th:href="'/alojamiento?id=' + ${reserva.alojamiento.id_alojamiento}" th:text="${reserva.alojamiento.tipo} + ' ' + ${reserva.alojamiento.nombre}"></a></td>
+			<td th:text="${reserva.fecha_inicio}"></td>
+			<td th:text="${reserva.fecha_fin}"></td>
+			<td th:text="${reserva.habitaciones} + ' (' + ${reserva.personas} + ' personas)'"></td>
+			<td th:text="${reserva.fecha_reserva}"></td>
+			<td th:text="${reserva.importe} + '€'"></td>
+			<td th:text="${reserva.pagado} ? 'Si' : 'No'"></td>
+			<td><i class="fas fa-info-circle" th:title="${reserva.observaciones==null} ? 'No hay ninguna observación adicional' : 'Observaciones: ' + ${reserva.observaciones}"></i></td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+</body>
+</html>

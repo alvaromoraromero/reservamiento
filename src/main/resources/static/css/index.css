@@ -1,0 +1,38 @@
+form {
+	display: initial;
+}
+
+form > div > * {
+	display: initial;
+	margin: 0 20px;
+	width: 100%;
+}
+
+select, input, button {
+	margin: 7px;
+	min-height: 70px;
+	padding: 17px;
+	background-color: darkseagreen;
+	font-size: 20px;
+}
+
+input[type="number"] {
+	width: 100%;
+}
+
+select:hover, input:hover {
+	background-color: mediumseagreen;
+}
+
+button {
+	height: 80%;
+	background-color: cornflowerblue;
+}
+
+button:hover {
+	background-color: DodgerBlue;
+}
+
+.tarjeta {
+	background-color: lightseagreen;
+}

@@ -1,0 +1,10 @@
+<header class="header2">
+    <div>
+        <ul th:with="pagina_actual=${#httpServletRequest.getRequestURI()}">
+            <li th:classappend="${pagina_actual == '/admin/alojamientos' ? 'active':''}"><a href="/admin/alojamientos" title="Administrar alojamientos"><i class="fas fa-hotel"></i> Alojamientos</a></li>
+            <li th:classappend="${pagina_actual == '/admin/comentarios' ? 'active':''}"><a href="/admin/comentarios" title="Administrar comentarios"><i class="fas fa-comments"></i> Comentarios</a></li>
+            <li th:classappend="${pagina_actual == '/admin/reservas' ? 'active':''}"><a href="/admin/reservas" title="Administrar reservas"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
+            <li th:classappend="${pagina_actual == '/admin/usuarios' ? 'active':''}"><a href="/admin/usuarios" title="Administrar usuarios"><i class="fas fa-user"></i> Usuarios</a></li>
+        </ul>
+    </div>
+</header>

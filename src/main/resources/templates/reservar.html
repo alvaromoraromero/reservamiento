@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <div th:include="/header.html"></div>
+    <title th:text="(${reserva.id_reserva}==0 ? 'Confirmar' : 'Gestionar') + ' reserva | Reservamiento'"></title>
+</head>
+<body>
+<div class="contenido">
+    <h1 th:text="(${reserva.id_reserva}==0 ? 'Confirmar' : 'Gestionar') + ' reserva'"></h1>
+    <h2>Datos alojamiento</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Habitaciones</th>
+            <th>Huespedes</th>
+            <th>Ubicacion</th>
+            <th>Dirección</th>
+            <th>Precio</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><a th:text="${alojamiento.tipo} + ' ' + ${alojamiento.nombre}" th:href="'/alojamiento?id=' + ${alojamiento.id_alojamiento}"></a></td>
+            <td th:text="${alojamiento.habitaciones}"></td>
+            <td th:text="${alojamiento.huespedes}"></td>
+            <td th:text="${alojamiento.ubicacion}"></td>
+            <td th:text="${alojamiento.direccion}"></td>
+            <td th:text="${alojamiento.precio} + '€/noche'"></td>
+        </tr>
+        </tbody>
+    </table>
+    <h2>Datos reserva</h2>
+    <p th:if="${reserva.id_reserva}!=0">Para modificar otros datos, debes cancelar la reserva y volver a generarla. Estamos trabajando para que se puedan modificar otros datos</p>
+    <table>
+        <thead>
+        <tr>
+            <th>Fecha inicio</th>
+            <th>Fecha fin</th>
+            <th>Personas</th>
+            <th>Habitaciones</th>
+            <th>Importe</th>
+            <th>Pagar ahora</th>
+            <th>Confirmar</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${reserva.fecha_inicio}"></td>
+            <td th:text="${reserva.fecha_fin}"></td>
+            <td th:text="${reserva.personas}"></td>
+            <td th:text="${reserva.habitaciones}"></td>
+            <td th:text="${reserva.importe} + '€'"></td>
+            <form id="cancelar" th:action="${reserva.id_reserva}==0 ? '/' : '/cancelar'" method="post">
+                <input type="hidden" name="origen" value="usuario">
+                <input type="hidden" name="id_reserva" th:value="${reserva.id_reserva}">
+            </form>
+            <form id="guardar" th:action="@{/guardar-reserva}" method="post">
+                <input type="hidden" th:value="${reserva.id_reserva}" name="id_reserva">
+                <td><input th:checked="${reserva.pagado}" type="checkbox" name="pagado"></td>
+                <td><button type="submit" form="cancelar" style="background-color: indianred">Cancelar reserva</button>
+                <button type="submit" form="guardar" style="margin-top: 5px;">Confirmar reserva</button></td>
+            </form>
+        </tr>
+        </tbody>
+    </table>
+    <h3>Observaciones de la reserva</h3>
+    <textarea form="guardar" th:text="${reserva.observaciones}" name="observaciones" placeholder="Observaciones (opcional)"></textarea>
+</div>
+</body>
+</html>

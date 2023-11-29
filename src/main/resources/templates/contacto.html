@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<div th:include="/header.html"></div>
+	<title>Contacto | Reservamiento</title>
+</head>
+<body>
+	<div class="contenido">
+		<h1>Contacto</h1>
+		<div class="formulario">
+			<form action="javascript:void(0);" method="post">
+				<div>
+					<div>
+						<label for="nombre">Nombre:</label>
+						<input required th:autofocus="${contacto.nombre == null}" th:readonly="${contacto.apellidos != null}" type="text" id="nombre" name="nombre" placeholder="Nombre" th:value="${contacto.nombre}">
+					</div>
+					<div>
+						<label for="apellidos">Apellidos:</label>
+						<input required th:readonly="${contacto.apellidos != null}" type="text" id="apellidos" name="apellidos" placeholder="Apellidos" th:value="${contacto.apellidos}">
+					</div>
+				</div>
+				<label for="correo">Correo:</label>
+				<input required th:readonly="${contacto.email != null}" type="email" id="correo" name="correo" placeholder="Correo" th:value="${contacto.email}">
+				<label for="telefono">Teléfono:</label>
+				<input th:readonly="${contacto.telefono != null}" type="tel" id="telefono" name="telefono" placeholder="Teléfono" th:value="${contacto.telefono}" pattern="[0-9]{9}">
+				<label for="asunto">Asunto:</label>
+				<input required autofocus type="text" id="asunto" name="asunto" placeholder="Asunto">
+				<label for="mensaje">Mensaje:</label>
+				<textarea required id="mensaje" name="mensaje" placeholder="Mensaje"></textarea>
+				<button type="submit">Enviar</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

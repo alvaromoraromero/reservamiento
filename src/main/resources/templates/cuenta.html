@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <div th:include="/header.html"></div>
+    <title>Mi cuenta | Reservamiento</title>
+</head>
+<body>
+<div class="contenido">
+    <h1>Mi cuenta</h1>
+    <h2 th:text="${cuenta.rol}"></h2>
+    <div class="formulario">
+        <form th:action="@{/cuenta}" th:object="${cuenta}" method="post">
+            <label for="correo">Correo:</label>
+            <input required type="email" id="correo" name="email" placeholder="Cambiar correo" th:value="${cuenta.email}">
+            <div>
+                <div>
+                    <label for="nombre">Nombre:</label>
+                    <input required type="text" id="nombre" name="nombre" placeholder="Cambiar nombre"  th:value="${cuenta.nombre}">
+                </div>
+                <div>
+                    <label for="apellidos">Apellidos:</label>
+                    <input required type="text" id="apellidos" name="apellidos" placeholder="Cambiar apellidos" th:value="${cuenta.apellidos}">
+                </div>
+            </div>
+            <div>
+                <div>
+                    <label for="usuario">Usuario:</label>
+                    <input required type="text" id="usuario" name="username" placeholder="Nuevo usuario" th:value="${cuenta.username}">
+                </div>
+                <div>
+                    <label for="contraseña">Contraseña:</label>
+                    <input type="password" id="contraseña" name="password" placeholder="Nueva contraseña">
+                    <i class="fas fa-eye"></i>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <label for="telefono">Telefono:</label>
+                    <input type="tel" id="telefono" name="telefono" placeholder="Número de teléfono" pattern="[0-9]{9}"  th:value="${cuenta.telefono}">
+                </div>
+                <div style="width: 288px;">
+                    <label for="genero">Género:</label>
+                    <select required id="genero" name="genero">
+                        <option th:selected="${cuenta.genero=='H'}" value="H">Hombre</option>
+                        <option th:selected="${cuenta.genero=='M'}" value="M">Mujer</option>
+                        <option th:selected="${cuenta.genero=='0'}" value="0">Otro</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit">Cambiar datos</button>
+        </form>
+    </div>
+</div>
+<th:block th:if="${respuesta=='usuarioexiste'}">
+    <p class="error erojo">Ya existe un usuario con ese username.</p>
+</th:block>
+<th:block th:if="${respuesta=='correoexiste'}">
+    <p class="error erojo">Ya existe un usuario con ese correo.</p>
+</th:block>
+<th:block th:if="${respuesta=='correcto'}">
+    <p class="error everde">Datos actualizados correctamente.</p>
+</th:block>
+</body>
+</html>

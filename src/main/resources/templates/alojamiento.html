@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="utf-8">
+	<div th:include="/header.html"></div>
+	<link th:href="@{/css/estrellas.css}" rel="stylesheet">
+	<link th:href="@{/css/mapa.css}" rel="stylesheet">
+	<script th:src="@{/js/mapa.js}" type="text/javascript"></script>
+	<title th:text="${alojamiento.nombre} + ' | Reservamiento'"></title>
+	<div id="mapa" class="draggable" style="display: none;">
+		<div>
+			<i class="fas fa-times-circle fa-lg" id="cerrar" onclick="cerrarMapa();" title="Cerrar"></i>
+			<i class="fas fa-chevron-circle-down fa-lg" id="restaurar" onclick="restaurarMapa();" title="Restaurar"></i>
+			<i class="fas fa-chevron-circle-up fa-lg" id="maximizar" onclick="maximizarMapa();" title="Maximizar"></i>
+			<i class="fas fa-minus-circle fa-lg" id="minimizar" onclick="minimizarMapa();" title="Minimizar"></i>
+			<i class="fas fa-expand fa-lg" id="activar-pantalla-completa" onclick="activarPantallaCompleta();" title="Activar pantalla completa"></i>
+			<i class="fas fa-compress fa-lg" id="desactivar-pantalla-completa" onclick="desactivarPantallaCompleta();" title="Desactivar pantalla completa"></i>
+			<i class="fas fa-sync-alt" id="recargar" style="float: left;" onclick="recargarMapa();" title="Recargar"></i>
+			<i style="float: left; font-style: normal; pointer-events: none;"> Cómo llegar al alojamiento</i>
+		</div>
+		<div th:remove="tag" th:utext="${alojamiento.mapa}!=null ? ${alojamiento.mapa} : '<br><div class=erojo>No se han podido obtener indicaciones</div><br><iframe style=display:none;></iframe>'"></div>
+	</div>
+</head>
+<body>
+	<div class="contenido">
+		<h1 th:text="${alojamiento.tipo} + ' ' + ${alojamiento.nombre}"></h1>
+		<div class="tarjeta static">
+			<h2 th:if="${alojamiento.activo}"><i class="fas fa-calendar-alt"></i> Reservar en este alojamiento</h2>
+			<h2 th:if="!${alojamiento.activo}" style="color: red">Este alojamiento NO acepta nuevas reservas</h2>
+			<div class="formulario" th:if="${alojamiento.activo}">
+				<form th:action="@{/alojamientos}" method="post">
+					<input type="hidden" name="idalojamiento" th:value="${alojamiento.id_alojamiento}">
+					<input type="hidden" name="destino" th:value="${alojamiento.ubicacion}">
+					<div>
+						<div>
+							<label for="fechainicio">Fecha inicio:</label>
+							<input required type="date" name="fechainicio" id="fechainicio" onfocus="this.showPicker();" th:value="${reserva.fecha_inicio}" onchange="actualizarFechas();document.getElementById('fechafin').focus();">
+						</div>
+						<div>
+							<label for="fechafin">Fecha fin:</label>
+							<input required type="date" name="fechafin" id="fechafin" onfocus="this.showPicker();" th:value="${reserva.fecha_fin}" onchange="document.getElementById('personas').focus();">
+						</div>
+						<div>
+							<label for="personas">Personas:</label>
+							<input required type="number" name="personas" id="personas" th:value="${reserva.personas} == 0 ? '' : ${reserva.personas}" min="1" placeholder="Personas">
+						</div>
+						<div>
+							<label>Buscar disponibilidad:</label>
+							<button type="submit">Buscar disponibilidad</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<h2><i class="fas fa-list-alt"></i> Datos del alojamiento</h2>
+		<div class="tarjetas">
+			<img style="max-height: 400px; max-width: 50%;" th:src="${alojamiento.imagen}">
+			<table style="width: 40%">
+				<tr>
+					<th><i class="fas fa-map-marked-alt"></i> Dirección</th>
+					<td><a href="#" th:text="${alojamiento.direccion}" onclick="mostrarMapa();"></a></td>
+				</tr>
+				<tr>
+					<th><i class="fas fa-map-marker-alt"></i> Ubicación</th>
+					<td th:text="${alojamiento.ubicacion}"></td>
+				</tr>
+				<tr>
+					<th><i class="fas fa-money-bill-wave"></i> Precio/noche</th>
+					<td th:text="${alojamiento.precio} + '€'"></td>
+				</tr>
+				<tr>
+					<th><i class="fas fa-users"></i> Huéspedes/habitación</th>
+					<td th:text="${alojamiento.huespedes}"></td>
+				</tr>
+				<tr th:if="${alojamiento.tipo}!='Apartamento'">
+					<th><i class="fas fa-hotel"></i> Habitaciones</th>
+					<td th:text="${alojamiento.habitaciones}"></td>
+				</tr>
+			</table>
+		</div>
+		<h2><i class="fas fa-comments"></i> Comentarios</h2>
+		<h3 th:if="${comentariopropio.isEmpty()}"><i class="fas fa-plus-circle"></i> Publicar nuevo comentario</h3>
+		<h3 th:if="!${comentariopropio.isEmpty()}"><i class="fas fa-thumbs-up"></i> Tu comentario para este alojamiento</h3>
+		<h2 th:if="${alojamiento.activo}" sec:authorize="isAnonymous()" style="color: red">Debes <a href="/login">iniciar sesión</a> para poder publicar un comentario</h2>
+		<div th:if="!${comentariopropio.isEmpty()}" class="comentarios">
+			<div th:each="propio:${comentariopropio}" class="comentario">
+				<form action="eliminarcomentario" class="eliminar-comentario" method="post">
+					<input type="hidden" th:value="${alojamiento.id_alojamiento}" name="id_alojamiento">
+					<input type="hidden" th:value="${propio.id_comentario}" name="id_comentario">
+					<button style="background-color: indianred"><i class="fas fa-trash-alt"></i></button>
+				</form>
+				<h2><i class="fas fa-star" th:each="star:${#numbers.sequence(1,propio.estrellas)}"></i></h2>
+				<h2 th:text="${propio.titulo}"></h2>
+				<p th:text="${propio.descripcion}"></p>
+				<p class="autor" th:text="'Tú - ' + ${@thymeMath.formatearFecha(propio.fecha_comentario)}"></p>
+			</div>
+		</div>
+		<h2 th:if="!${!comentariopropio.isEmpty() || alojamiento.activo}" style="color: red">Este alojamiento NO acepta nuevos comentarios</h2>
+		<div class="formulario" th:if="${comentariopropio.isEmpty() && alojamiento.activo}" sec:authorize="!isAnonymous()">
+			<form th:action="@{/alojamiento}" th:object="${comentario}" method="post" style="min-width: 80%">
+				<input type="hidden" th:value="${alojamiento.id_alojamiento}" name="id_alojamiento">
+				<label for="estrellas">Valoración:</label>
+				<input title="Valora este alojamiento de 1 a 5" value="5" class="estrellas" type="range" oninput="this.style.setProperty('--value', this.value)" min="1" max="5" id="estrellas" name="estrellas">
+				<label for="titulo">Titulo:</label>
+				<input required type="text" id="titulo" name="titulo" placeholder="Título del comentario">
+				<label for="descripcion">Descripción:</label>
+				<textarea required id="descripcion" name="descripcion" placeholder="Describe brevemente tu experiencia..."></textarea>
+				<label>Publicar:</label>
+				<button type="submit">Publicar</button>
+			</form>
+		</div>
+		<hr>
+		<h3><i class="fas fa-comment-dots"></i> Comentarios del alojamiento</h3>
+		<h2 th:if="${comentarios.isEmpty()}" style="color:red;">Este alojamiento no tiene ningún comentario aún</h2>
+		<div th:if="${!comentarios.isEmpty()}" class="comentarios">
+			<div th:each="comentario:${comentarios}" class="comentario">
+				<h2><i class="fas fa-star" th:each="star:${#numbers.sequence(1,comentario.estrellas)}"></i></h2>
+				<h2 th:text="${comentario.titulo}"></h2>
+				<p th:text="${comentario.descripcion}"></p>
+				<p class="autor" th:text="${comentario.usuario.nombre} + ' ' + ${comentario.usuario.apellidos} + ' - ' + ${@thymeMath.formatearFecha(comentario.fecha_comentario)}"></p>
+			</div>
+		</div>
+	</div>
+<th:block th:if="${respuesta=='publicado'}">
+	<p class="error everde">Comentario publicado correctamente</p>
+</th:block>
+<th:block th:if="${respuesta=='eliminado'}">
+	<p class="error everde">Comentario eliminado correctamente</p>
+</th:block>
+</body>
+</html>

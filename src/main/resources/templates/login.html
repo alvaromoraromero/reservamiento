@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<div th:include="/header.html"></div>
+	<title>Iniciar sesión | Reservamiento</title>
+</head>
+<body>
+<div class="contenido">
+	<h1>Iniciar Sesión</h1>
+	<div class="formulario">
+		<div class="tarjeta">
+			<h2><i class="fas fa-user-plus"></i> ¿Es tu primera vez?</h2>
+			<p>Si aún no te has registrado en nuestra web, <a href="/register">regístrate ahora</a>.</p>
+		</div>
+		<form th:action="@{/login}" th:object="${login}" method="post">
+			<th:block th:if="${respuesta=='error'}">
+				<p class="error erojo">Usuario o Contraseña erróneos</p>
+			</th:block>
+			<th:block th:if="${respuesta=='logout'}">
+				<p class="error everde">Has cerrado sesión</p>
+			</th:block>
+			<label for="usuario">Usuario/Correo:</label>
+			<input autofocus required type="text" id="usuario" name="username" placeholder="Usuario/Correo">
+			<label for="contraseña">Contraseña:</label>
+			<input required type="password" id="contraseña" name="password" placeholder="Contraseña">
+			<i class="fas fa-eye" style="margin-top: 109px;"></i>
+			<button type="submit">Iniciar sesión</button>
+		</form>
+		<div class="tarjeta">
+			<h2><i class="fas fa-user-secret"></i> Tu privacidad</h2>
+			<p>Tus datos son importantes para nosotros, al iniciar sesión, aceptas nuestra <a href="/privacidad">política de privacidad</a>.</p>
+		</div>
+	</div>
+</div>
+</body>
+</html>

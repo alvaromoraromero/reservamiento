@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<div th:include="/header.html"></div>
+	<link th:href="@{/css/index.css}" rel="stylesheet">
+	<title>Inicio | Reservamiento</title>
+</head>
+<body>
+	<div class="contenido">
+		<div th:include="buscador.html"></div>
+		<h1>Alojamientos destacados</h1>
+		<div class="tarjetas">
+			<div class="tarjeta" th:each="alojamiento:${reservastop}">
+				<h2 th:text="${alojamiento.ubicacion}"></h2>
+				<h2 th:text="${alojamiento.tipo} + ' ' + ${alojamiento.nombre}" style="font-size: 1vw"></h2>
+				<img th:src="${alojamiento.imagen}">
+				<a th:href="'/alojamiento?id=' + ${alojamiento.id_alojamiento}"><button>Ver detalles</button></a>
+			</div>
+		</div>
+		<h1>¿Por qué elegir reservamiento?</h1>
+		<div class="tarjetas">
+			<div class="tarjeta">
+				<i class="fas fa-universal-access fa-5x"></i>
+				<h1>Accesibilidad</h1>
+				<p>Esta página está hecha para que cualquier tipo de usuario pueda navegar en ella.</p>
+			</div>
+			<div class="tarjeta">
+				<i class="fas fa-location-arrow fa-5x"></i>
+				<h1>Novedades</h1>
+				<p>En Reservamiento os damos las últimas novedades y recomendaciones de lugares para ir de viaje.</p>
+			</div>
+			<div class="tarjeta">
+				<i class="fas fa-hand-holding-usd fa-5x"></i>
+				<h1>Ofertas</h1>
+				<p>Aquí os traeremos las mejores ofertas para que podaís viajar a un módico precio.</p>
+			</div>
+			<div class="tarjeta">
+				<i class="fas fa-code-branch fa-5x"></i>
+				<h1>Manejo</h1>
+				<p>El manejo de la web está basado para que todos los usuarios puedan navegar fácilmente por ella y que no tenga ninguna pérdida entre un enlace a otro dentro de ella.</p>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

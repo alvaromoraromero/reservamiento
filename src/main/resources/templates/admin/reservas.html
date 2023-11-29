@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <div th:include="/header.html"></div>
+    <div th:include="/admin/header2.html"></div>
+    <title>Administrar alojamientos | Reservamiento</title>
+</head>
+<body>
+<div class="contenido">
+    <h1>Administración: Reservas</h1>
+    <h2 th:utext="(${reservaedit.id_reserva}==0 ? '<i class=\'fas fa-plus-circle\'></i> Insertar' : '<i class=\'fas fa-edit\'></i> Editar') + ' reserva'"></h2>
+    <div class="formulario">
+        <form th:action="@{/admin/agregarreserva}" th:object="${reserva}" method="post">
+            <input type="hidden" name="id_reserva" th:value="${reservaedit.id_reserva}">
+            <div>
+                <div>
+                    <label for="username">Username:</label>
+                    <input required type="text" id="username" name="username" placeholder="Username" th:value="${reservaedit.usuario}!=null ? ${reservaedit.usuario.username} : ''">
+                </div>
+                <div>
+                    <label for="id_alojamiento">Alojamiento:</label>
+                    <input required type="number" min="1" id="id_alojamiento" name="id_alojamiento" placeholder="ID alojamiento" th:value="${reservaedit.alojamiento}!=null ? ${reservaedit.alojamiento.id_alojamiento} : ''">
+                </div>
+                <div>
+                    <label for="fechainicio">Fecha de inicio</label>
+                    <input required type="date" id="fechainicio" name="fechainicio" onfocus="this.showPicker();" th:value="${reservaedit.fecha_inicio}">
+                </div>
+                <div>
+                    <label for="fechafin">Fecha de fin</label>
+                    <input required type="date" id="fechafin" name="fechafin" onfocus="this.showPicker();" th:value="${reservaedit.fecha_fin}">
+                </div>
+                <div>
+                    <label for="personas">Personas</label>
+                    <input required type="number" min="1" id="personas" name="personas" placeholder="Personas" th:value="${reservaedit.personas}==0 ? '' : ${reservaedit.personas}">
+                </div>
+                <div th:if="${reservaedit.id_reserva}!=0">
+                    <label>Cancelar:</label>
+                    <a href="/admin/reservas"><button type="button" style="background-color: indianred">Cancelar</button></a>
+                </div>
+                <div>
+                    <label th:text="${reservaedit.id_reserva}==0 ? 'Añadir:' : 'Editar:'"></label>
+                    <button type="submit" th:text="${reservaedit.id_reserva}==0 ? 'Añadir' : 'Editar'"></button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <p th:if="${reservaedit.id_reserva}!=0" style="text-align: center;color: red">ADVERTENCIA: Se restablecerá el campo de "observaciones" y se marcará como NO pagado.</p>
+    <h2 th:if="${reservaedit.id_reserva}==0"><i class="fas fa-search"></i> Buscar reserva</h2>
+    <div class="formulario" th:if="${reservaedit.id_reserva}==0">
+        <form>
+            <div>
+                <div>
+                    <label for="q">Username o nombre de alojamiento:</label>
+                    <input type="text" id="q" name="q" placeholder="Username o nombre de alojamiento" th:value="${query}">
+                </div>
+                <div th:if="${query.length()}>0">
+                    <label>Borrar búsqueda:</label>
+                    <a href="/admin/reservas"><button type="button" style="background-color: indianred">Borrar búsqueda</button></a>
+                </div>
+                <div>
+                    <label>Buscar:</label>
+                    <button type="submit">Buscar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <h2><i class="fas fa-list-alt"></i> Editar o eliminar reservas</h2>
+    <h3 style="color: red" th:if="${reservas.isEmpty()}">No se han encontrado reservas</h3>
+    <table th:if="${!reservas.isEmpty()}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Alojamiento</th>
+            <th>Fecha inicio</th>
+            <th>Fecha fin</th>
+            <th>Habitaciones reservadas</th>
+            <th>Fecha de registro</th>
+            <th>¿Pagado?</th>
+            <th>Editar</th>
+            <th>Cancelar</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="reserva:${reservas}" th:class="${reserva.activo} ? '' : 'inactivo'">
+            <td th:text="${reserva.id_reserva}"></td>
+            <td><a th:href="'/admin/usuarios?q=' + ${reserva.usuario.email}" th:text="'[' + ${reserva.usuario.id_usuario} +'] ' + ${reserva.usuario.username}"></a></td>
+            <td><a th:href="'/admin/alojamientos?q=' + ${reserva.alojamiento.nombre}" th:text="'[' + ${reserva.alojamiento.id_alojamiento} +'] ' + ${reserva.alojamiento.tipo} + ' ' + ${reserva.alojamiento.nombre}"></a></td>
+            <td th:text="${reserva.fecha_inicio}"></td>
+            <td th:text="${reserva.fecha_fin}"></td>
+            <td th:text="${reserva.habitaciones} + ' (' + ${reserva.personas} + ' personas)'"></td>
+            <td th:text="${reserva.fecha_reserva}"></td>
+            <td th:text="${reserva.pagado} ? 'Si' : 'No'"></td>
+            <td>
+                <form th:action="@{/admin/reservas}" method="post">
+                    <input type="hidden" name="id_reserva" th:value="${reserva.id_reserva}">
+                    <button style="background-color: blue">Editar</button>
+                </form>
+            </td>
+            <td>
+                <p th:if="!${reserva.activo}">
+                    Cancelada
+                </p>
+                <form th:action="@{/cancelar}" th:if="${reserva.activo}" method="post">
+                    <input type="hidden" name="origen" value="admin">
+                    <input type="hidden" name="id_reserva" th:value="${reserva.id_reserva}">
+                    <button style="background-color: indianred;">Cancelar</button>
+                </form>
+            </td>
+            <td><i class="fas fa-info-circle" style="color: blue" th:title="${reserva.observaciones==null} ? 'No hay ninguna observación adicional' : 'Observaciones: ' + ${reserva.observaciones}"></i></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<th:block th:if="${respuesta=='agregada'}">
+    <p class="error everde">Reserva añadida correctamente</p>
+</th:block>
+<th:block th:if="${respuesta=='editada'}">
+    <p class="error everde">Reserva editada correctamente</p>
+</th:block>
+<th:block th:if="${respuesta=='cancelada'}">
+    <p class="error everde">Reserva cancelada correctamente</p>
+</th:block>
+<th:block th:if="${respuesta=='error'}">
+    <p class="error erojo">Se ha producido un error</p>
+</th:block>
+<th:block th:if="${respuesta=='errorusuario'}">
+    <p class="error erojo">No existe el usuario que has introducido</p>
+</th:block>
+<th:block th:if="${respuesta=='erroralojamiento'}">
+    <p class="error erojo">No existe el alojamiento que has introducido</p>
+</th:block>
+</body>
+</html>

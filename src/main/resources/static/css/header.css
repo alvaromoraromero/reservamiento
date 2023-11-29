@@ -1,0 +1,425 @@
+/* INICIO ESTILOS GENÉRICOS*/
+:root {
+	--theme-color: #171B1E;
+}
+* {
+	box-sizing: border-box;
+	scroll-behavior: smooth;
+	font-family: Arial, serif;
+	/*transition: background-color 1s ease-out .75s, color .5s ease-out;*/
+}
+
+:target::before { /* ESTO PERMITE LA SEPARACIÓN EN LOS ENLACES ANCLA */
+	content: "";
+	display: block;
+	height: 50px;
+	margin: -50px 0 0;
+}
+
+body {
+	padding: 54px 0 20px 0;
+	margin: 0;
+	background: url("/img/fondo.png"), repeat;
+	background-size: 20%;
+}
+
+.contenido {
+	border: solid black 2px;
+	background: #FFFFFF;
+	margin: 28px 70px;
+	padding: 30px;
+	border-radius: 17px;
+}
+
+.contenido > h1, .contenido > h2 {
+	text-align: center;
+}
+
+.fa-info-circle {
+	color: blue;
+	cursor: help;
+}
+/*FIN ESTILOS GENÉRICOS*/
+
+
+/*INICIO ESTILOS HEADER-FOOTER*/
+header, footer {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: 37px;
+	background-color: var(--theme-color);
+	z-index: 999;
+}
+
+header ul, footer ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: var(--theme-color);
+}
+
+header li, footer li {
+  float: left;
+}
+
+header li a, footer li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 17px 17px;
+  text-decoration: none;
+  font-size: 17px;
+  text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 1px 1px black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black;
+}
+
+header li a:hover, footer li a:hover {
+  background-color: #111;
+}
+
+.active {
+	background-color: #04AA6D;
+	transition: background-color 0s;
+}
+
+.logo a {
+  padding: 7px 7px;
+}
+
+.logo a img {
+	height: 34px;
+}
+
+.derecha {
+	float: right;
+}
+
+#alternarTema {
+	cursor: pointer;
+}
+
+footer {
+	height: 20px;
+	top: unset;
+	bottom: 0;
+}
+
+footer ul {
+	display: flex;
+	justify-content: space-around;
+}
+
+footer ul li a {
+	display: unset;
+	font-size: 14px;
+}
+
+.header2 {
+	position: absolute;
+	top: 60px;
+	display: flex;
+	width: 100%;
+	height: 50px;
+	font-size: 12px;
+	list-style-type: none;
+	overflow: hidden;
+	left: 0;
+	background-color: transparent;
+	z-index: 2;
+}
+
+.header2 div {
+	margin: 0 auto;
+	position: relative;
+}
+/*FIN ESTILOS HEADER-FOOTER*/
+
+
+/*INICIO ESTILO TARJETAS*/
+.tarjetas, .comentarios {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+
+.comentarios {
+	flex-direction: column;
+	align-items: center;
+}
+
+.tarjeta, .comentario {
+	position: relative;
+	flex: 1 0 21%;
+	margin: 17px;
+	background-color: #171B1E6A;
+	padding: 10px;
+	border: black solid 2px;
+	max-width: 300px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	transition: transform .2s;
+	border-radius: 7px;
+}
+
+.comentario {
+	display: block;
+	min-width: 80%;
+}
+
+.eliminar-comentario {
+	position: absolute;
+	right: 0;
+	margin: 10px;
+}
+
+.autor {
+	font-size: small;
+	text-align: right;
+}
+
+.static {
+	max-width: initial;
+}
+
+.tarjeta > img {
+	max-height: 140px;
+	width: 100%;
+}
+
+.tarjeta:hover:not(.static), .tarjeta:focus:not(.static) {
+	transform: scale(1.1);
+	outline: 0;
+	border-color: darkblue;
+}
+/*FIN ESTILO TARJETAS*/
+
+
+/*INICIO ESTILOS TABLAS*/
+table {
+	color: black;
+	font-weight: 700;
+	width: 100%;
+}
+
+table td, table th {
+	padding: 8px;
+	text-align: center;
+}
+
+table tr:not(.inactivo) {
+	background-color: #C8C8C8;
+}
+
+table tr:nth-child(even):not(.inactivo):not(:hover) {
+	background-color: #f2f2f2;
+}
+
+table tr:hover:not(.inactivo) {
+	background-color: DarkTurquoise;
+}
+
+table th {
+	padding-top: 12px;
+	padding-bottom: 12px;
+	background-color: #04AA6D;
+	color: white;
+}
+
+.inactivo {
+	background-color: indianred;
+}
+/*FIN ESTILOS TABLAS*/
+
+
+/*INICIO ESTILO FORMULARIOS*/
+.formulario {
+	display: flex;
+	justify-content: space-evenly;
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+}
+
+form > div {
+	flex-direction: row;
+	display: flex;
+	justify-content: center;
+}
+
+form > div > div {
+	display: flex;
+	flex-direction: column;
+}
+
+form > div > div:nth-child(n) {
+	margin-left: 10px;
+}
+
+input, textarea, select {
+	width: 100%;
+	height: 40px;
+	padding: 0 20px;
+	margin: 7px 0;
+	font-size: 20px;
+	border-radius: 10px;
+}
+
+input[type="number"] {
+	width: 100px;
+}
+
+input[type='text']:read-only {
+	background-color: lightgray;
+	cursor: not-allowed;
+}
+
+input:focus, select:focus, textarea:focus {
+	outline: none;
+	box-shadow: 0 0 0.5rem #444444;
+}
+
+.fa-eye, .fa-eye-slash {
+	color: black;
+	position: absolute;
+	margin-top: 37px;
+	margin-left: 259px;
+	cursor: pointer;
+}
+
+.fa-eye:hover, .fa-eye-slash:hover {
+	transform: scale(1.2);
+}
+
+textarea {
+	height: 100px;
+}
+
+button {
+	background-color: #2ea44f;
+	border: 1px solid rgba(27, 31, 35, .15);
+	border-radius: 6px;
+	color: white;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 20px;
+	padding: 6px 16px;
+	cursor: pointer;
+	margin: 7px 0;
+}
+
+button:focus:not(:focus-visible):not(.focus-visible) {
+	box-shadow: none;
+	outline: none;
+}
+
+button:hover {
+	background-color: #2c974b;
+}
+
+button:hover, button:focus {
+	box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
+	outline: none;
+}
+
+button:disabled {
+	background-color: #94d3a2;
+	border-color: rgba(27, 31, 35, .1);
+	color: rgba(255, 255, 255, .8);
+	cursor: default;
+}
+
+button:active {
+	background-color: #298e46;
+	box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
+}
+/*FIN ESTILO FORMULARIOS*/
+
+/* INICIO ESTILOS MENSAJES SUPERIORES */
+.error {
+	overflow: hidden;
+	position: fixed;
+	top: 38px;
+	left: 0;
+	width: 100%;
+	min-height: 27px;
+	color: white;
+	text-align: center;
+	padding-top: 5px;
+	z-index: 999;
+	animation: vanish 0s ease-in 7s forwards;
+}
+.error span {
+	position: absolute;
+	float: right;
+	top: 6px;
+	right: 10px;
+	cursor: pointer;
+	transition: transform .3s;
+}
+.error span:hover {
+	filter: invert(1);
+	transform: scale(1.4);
+}
+@media (orientation: portrait){
+	.error {
+		top: 0;
+		min-height: 40px;
+		font-size: 35px;
+	}
+}
+.error a {
+	color: white;
+	font-weight: 1000;
+}
+
+.error100 {
+	height: 100%;
+	color: black;
+	font-size: 30px;
+}
+
+.enaranja {
+	background-color: orange;
+}
+.everde {
+	background-color: #04DF6D;
+	color: black;
+}
+.erojo {
+	background-color: #ED1D40;
+}
+.notvanish {
+	position: absolute;
+	z-index: 997;
+	animation: notvanish 0s ease-in 7s forwards;
+}
+@-webkit-keyframes vanish {
+	to {
+		width:0;
+		height:0;
+	}
+}
+@keyframes vanish {
+	to {
+		width:0;
+		height:0;
+	}
+}
+@-webkit-keyframes notvanish {
+	to {
+		width: 100%;
+		min-height: 27px;
+	}
+}
+@keyframes notvanish {
+	to {
+		width: 100%;
+		min-height: 27px;
+	}
+}
+/* FIN ESTILOS MENSAJES SUPERIORES */
